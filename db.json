@@ -1,0 +1,34 @@
+{
+  "profiles": [
+    {
+      "name": "James Wellington",
+      "job": "Développeur",
+      "location": "Bordeaux",
+      "available": true
+    },
+    {
+      "name": "Julien Costa",
+      "job": "Testeur",
+      "location": "Paris",
+      "available": false
+    },
+    {
+      "name": "Émilie Dubois",
+      "job": "Designer",
+      "location": "Bordeaux",
+      "available": true
+    },
+    {
+      "name": "Martin Bartolo",
+      "job": "Product Owner",
+      "location": "Marseille",
+      "available": false
+    },
+    {
+      "name": "Lucy Scott",
+      "job": "Product Owner",
+      "location": "Toulouse",
+      "available": true
+    }
+  ]
+}
