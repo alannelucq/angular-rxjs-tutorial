@@ -1,0 +1,22 @@
+<div class="profile-view-container">
+  <div class="card">
+    <table>
+      <tr>
+        <th>Nom</th>
+        <th>Métier</th>
+        <th>Localisation</th>
+        <th>Disponibilité</th>
+      </tr>
+      <tr *ngFor="let profile of profiles">
+        <td>{{ profile.name }}</td>
+        <td>{{ profile.job }}</td>
+        <td>{{ profile.location }}</td>
+        <td>
+            <div class="availability-badge" [ngClass]="profile.available ? 'available' : 'unavailable'">
+              {{ profile.available ? 'Disponible' : 'Indisponible' }}
+            </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
