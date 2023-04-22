@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { Profile } from "../../core/models/profile.model";
 
 @Component({
   selector: 'app-profiles',
@@ -10,5 +11,5 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
   styleUrls: ['./profiles.component.scss']
 })
 export class ProfilesComponent {
-  profiles = [];
+  profiles: Profile[] = [];
 }
