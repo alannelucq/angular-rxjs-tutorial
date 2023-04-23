@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { Profile } from "../../core/models/profile.model";
 import { ProfilesGateway } from "../../core/gateways/profiles.gateway";
-import { combineLatest, map, Observable, startWith } from "rxjs";
+import { combineLatest, debounceTime, Observable, startWith, switchMap } from "rxjs";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
@@ -26,25 +26,23 @@ export class ProfilesComponent {
   }
 
   private getProfiles(): Observable<Profile[]> {
-    const profiles$ = this.profilesGateway.fetchProfiles();
-
     const search$ = combineLatest([
       this.search.controls.name.valueChanges.pipe(startWith('')),
       this.search.controls.job.valueChanges.pipe(startWith('')),
       this.search.controls.location.valueChanges.pipe(startWith('')),
       this.search.controls.available.valueChanges.pipe(startWith(false))
-    ]);
+    ]).pipe(
+      debounceTime(300)
+    );
 
-    return combineLatest([profiles$, search$])
+    return search$
       .pipe(
-        map(([profiles, [name, job, location, availableOnly]]) => profiles.filter(profile => {
-          const isNameMatching = profile.name.toLowerCase().includes(name.toLowerCase());
-          const isJobMatching = profile.job.toLowerCase().includes(job.toLowerCase());
-          const isLocationMatching = profile.location.toLowerCase().includes(location.toLowerCase());
-          const isAvailabilityMatching = availableOnly ? profile.available : true;
-
-          return isNameMatching && isJobMatching && isLocationMatching && isAvailabilityMatching;
+        switchMap(([name, job, location, availableOnly]) => this.profilesGateway.fetchProfiles({
+          name,
+          job,
+          location,
+          availableOnly
         }))
-      )
+      );
   }
 }
