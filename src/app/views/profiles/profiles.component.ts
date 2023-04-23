@@ -15,7 +15,10 @@ import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 })
 export class ProfilesComponent {
   search = this.fb.nonNullable.group({
-    name: ['']
+    name: [''],
+    job: [''],
+    location: [''],
+    available: [false]
   });
   profiles$: Observable<Profile[]> = this.getProfiles();
 
@@ -24,10 +27,24 @@ export class ProfilesComponent {
 
   private getProfiles(): Observable<Profile[]> {
     const profiles$ = this.profilesGateway.fetchProfiles();
-    const searchName$ = this.search.controls.name.valueChanges.pipe(startWith(''));
-    return combineLatest([profiles$, searchName$])
+
+    const search$ = combineLatest([
+      this.search.controls.name.valueChanges.pipe(startWith('')),
+      this.search.controls.job.valueChanges.pipe(startWith('')),
+      this.search.controls.location.valueChanges.pipe(startWith('')),
+      this.search.controls.available.valueChanges.pipe(startWith(false))
+    ]);
+
+    return combineLatest([profiles$, search$])
       .pipe(
-        map(([profiles, name]) => profiles.filter(profile => profile.name.toLowerCase().includes(name.toLowerCase())))
+        map(([profiles, [name, job, location, availableOnly]]) => profiles.filter(profile => {
+          const isNameMatching = profile.name.toLowerCase().includes(name.toLowerCase());
+          const isJobMatching = profile.job.toLowerCase().includes(job.toLowerCase());
+          const isLocationMatching = profile.location.toLowerCase().includes(location.toLowerCase());
+          const isAvailabilityMatching = availableOnly ? profile.available : true;
+
+          return isNameMatching && isJobMatching && isLocationMatching && isAvailabilityMatching;
+        }))
       )
   }
 }
