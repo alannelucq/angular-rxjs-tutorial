@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { Profile } from "../../core/models/profile.model";
 import { ProfilesGateway } from "../../core/gateways/profiles.gateway";
-import { combineLatest, map, Observable, startWith } from "rxjs";
+import { combineLatest, debounceTime, Observable, startWith, switchMap } from "rxjs";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
@@ -26,7 +26,6 @@ export class ProfilesComponent {
   }
 
   private getProfiles(): Observable<Profile[]> {
-    const profiles$ = this.profilesGateway.fetchProfiles();
     const search$ = combineLatest([
       this.search.controls.name.valueChanges.pipe(startWith('')),
       this.search.controls.job.valueChanges.pipe(startWith('')),
