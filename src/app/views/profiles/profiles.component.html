@@ -1,21 +1,42 @@
 <div class="profile-view-container">
   <div class="card">
-    <form class="search-container" [formGroup]="search">
+    <form class="search-container">
       <span class="search-title">Recherche</span>
       <div class="field">
         <label for="name" class="floating">Nom</label>
-        <input type="text" id="name" formControlName="name">
+        <input
+          id="name"
+          name="name"
+          [ngModel]="name()"
+          (keyup)="name.set($any($event.target).value)"
+        >
       </div>
       <div class="field">
         <label for="job" class="floating">Métier</label>
-        <input type="text" id="job" formControlName="job">
+        <input
+          id="job"
+          name="job"
+          [ngModel]="job()"
+          (keyup)="job.set($any($event.target).value)"
+        >
       </div>
       <div class="field">
         <label for="location" class="floating">Localisation</label>
-        <input type="text" id="location" formControlName="location">
+        <input
+          id="location"
+          name="location"
+          [ngModel]="location()"
+          (keyup)="job.set($any($event.target).value)"
+        >
       </div>
       <div class="field">
-        <mat-slide-toggle formControlName="available">Disponible uniquement</mat-slide-toggle>
+        <mat-slide-toggle
+          name="available"
+          [ngModel]="available()"
+          (click)="available.set($any($event.target).value)"
+        >
+          Disponible uniquement
+        </mat-slide-toggle>
       </div>
     </form>
   </div>
@@ -27,7 +48,7 @@
         <th>Localisation</th>
         <th>Disponibilité</th>
       </tr>
-      <tr *ngFor="let profile of profiles$ | async">
+      <tr *ngFor="let profile of profiles()">
         <td>{{ profile.name }}</td>
         <td>{{ profile.job }}</td>
         <td>{{ profile.location }}</td>
