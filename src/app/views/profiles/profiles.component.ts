@@ -31,18 +31,17 @@ export class ProfilesComponent {
       this.search.controls.job.valueChanges.pipe(startWith('')),
       this.search.controls.location.valueChanges.pipe(startWith('')),
       this.search.controls.available.valueChanges.pipe(startWith(false))
-    ]).pipe(
-      debounceTime(300)
-    );
+    ]);
 
-    return search$
+    return combineLatest([profiles$, search$])
       .pipe(
-        switchMap(([name, job, location, availableOnly]) => this.profilesGateway.fetchProfiles({
-          name,
-          job,
-          location,
-          availableOnly
+        map(([profiles, [name, job, location, availability]]) => profiles.filter(profile => {
+          const isNameMatching = profile.name.toLowerCase().includes(name.toLowerCase());
+          const isJobMatching = profile.job.toLowerCase().includes(job.toLowerCase());
+          const isLocationMatching = profile.location.toLowerCase().includes(location.toLowerCase());
+          const isAvailabilityMatching = availability ? profile.available : true;
+          return isNameMatching && isJobMatching && isLocationMatching && isAvailabilityMatching;
         }))
-      );
+      )
   }
 }

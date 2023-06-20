@@ -15,8 +15,7 @@
     width: 100%;
 
     .field {
-      //flex: 1;
-      width: 30%;
+      flex: 1;
       position: relative;
 
       ::ng-deep .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after {
